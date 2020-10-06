@@ -13,10 +13,15 @@ class ContactForm extends React.Component {
     }
     handleEmailChange(event) {
         const inputValue = event.target.value;
-        const isEmpty = inputValue === '';
+        let isError;
+        if (inputValue === '' || inputValue.length >= 50 || inputValue.match(/^([a-zA-Z0-9])+([a-zA-Z0-9\._-])*@([a-zA-Z0-9_-])+([a-zA-Z0-9\._-]+)+$/) === null) {
+            isError = true;
+        } else {
+            isError = false;
+        }
         this.setState({
             email: inputValue,
-            hasEmailError: isEmpty
+            hasEmailError: isError
         })
     }
     handleContentChange(event) {
@@ -34,11 +39,19 @@ class ContactForm extends React.Component {
     render() {
         let emailErrorText;
         if (this.state.hasEmailError) {
-            emailErrorText = (
-                <p className='contact-message-error'>
-                    メールアドレスを入力してください
-                </p>
-            );
+            if (this.state.email === '') {
+                emailErrorText = (
+                    <p className='contact-message-error'>
+                        メールアドレスを入力してください
+                    </p>
+                );
+            } else if (this.state.email >= 50) {
+                emailErrorText = (
+                    <p className='contact-message-error'>
+                        50文字以上入力できません
+                    </p> 
+                );
+            }
         }
         // if (this.state.email.length >= 50) {
         //     emailErrorText = (
